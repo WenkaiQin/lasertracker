@@ -23,7 +23,7 @@ def on_mouse(event, x, y, flags, frame):
 		lb = np.array(color - HSV_THRESHOLD/2)
 		ub = np.array(color + HSV_THRESHOLD/2)
 		print 'Lower bound: ', lb
-	print 'Upper bound: ', ub
+		print 'Upper bound: ', ub
 		print
 
 
