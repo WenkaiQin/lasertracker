@@ -6,13 +6,13 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 import time
 
-color = ([84,10,255])
-lb = np.array([0,0,0])
-ub = np.array([0,0,0])
-
 HSV_THRESHOLD = np.array([15,170,150])
 PATH_LENGTH = 10
 SHOW_ALL_DETECTIONS = True	
+
+color = ([84,10,255])
+lb = np.array(color - HSV_THRESHOLD/2)
+ub = np.array(color + HSV_THRESHOLD/2)
 
 def on_mouse(event, x, y, flags, frame):
 	# Use globals because callback functions are a pain.
