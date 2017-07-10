@@ -10,7 +10,7 @@ color = None
 lb = np.array([0,0,0])
 ub = np.array([0,0,0])
 
-HSV_THRESHOLD = np.array([15,170,150])
+HSV_THRESHOLD = np.array([83,8,255])
 PATH_LENGTH = 10
 SHOW_ALL_DETECTIONS = True	
 
@@ -59,8 +59,8 @@ def main():
 	for frame in camera.capture_continuous(raw_capture, format="bgr", use_video_port=True):
 		# Capture and format frame.
 		im = frame.array
-		im = cv2.pyrDown(im)
-		im = cv2.flip(im, 1)
+		# im = cv2.pyrDown(im)
+		# im = cv2.flip(im, 1)
 		im_hsv = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
 
 		# Callback if mouse action in frame.
