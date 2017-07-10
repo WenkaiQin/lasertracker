@@ -103,8 +103,8 @@ def main():
 			cv2.circle(results, (cx, cy), 7, (255, 255, 255), -1)
 
 			# Draw all hulls or just the biggest (depends on SHOW_ALL_DETECTIONS).
-			if SHOW_ALL_DETECTIONS:
-				cv2.drawContours(results, hulls, -1, (0,255,255), 2)
+			# if SHOW_ALL_DETECTIONS:
+				# cv2.drawContours(results, hulls, -1, (0,255,255), 2)
 			cv2.drawContours(results, [max_hull], -1, (255,0,0), 2)
 
 		# Display results.
