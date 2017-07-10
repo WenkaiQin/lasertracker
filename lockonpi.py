@@ -15,6 +15,7 @@ PATH_LENGTH = 10
 SHOW_ALL_DETECTIONS = True	
 
 def on_mouse(event, x, y, flags, frame):
+	print color
 	# Use globals because callback functions are a pain.
 	global color, lb, ub
 
@@ -28,6 +29,7 @@ def on_mouse(event, x, y, flags, frame):
 
 
 def main():	
+	print color
 	# Turn on camera.
 	# cap = cv2.VideoCapture(0)
 	camera = PiCamera()
@@ -59,7 +61,7 @@ def main():
 	for frame in camera.capture_continuous(raw_capture, format="bgr", use_video_port=True):
 		# Capture and format frame.
 		im = frame.array
-		# im = cv2.pyrDown(im)
+		im = cv2.pyrDown(im)
 		# im = cv2.flip(im, 1)
 		im_hsv = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
 
