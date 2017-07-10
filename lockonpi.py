@@ -28,8 +28,8 @@ def on_mouse(event, x, y, flags, frame):
 
 
 def main():	
-	global color
-	print color
+	global color, lb, ub, HSV_THRESHOLD, PATH_LENGTH, SHOW_ALL_DETECTIONS
+	
 	# Turn on camera.
 	# cap = cv2.VideoCapture(0)
 	camera = PiCamera()
