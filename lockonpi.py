@@ -6,11 +6,11 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 import time
 
-color = None
+color = ([84,10,255])
 lb = np.array([0,0,0])
 ub = np.array([0,0,0])
 
-HSV_THRESHOLD = np.array([83,8,255])
+HSV_THRESHOLD = np.array([15,170,150])
 PATH_LENGTH = 10
 SHOW_ALL_DETECTIONS = True	
 
@@ -27,7 +27,7 @@ def on_mouse(event, x, y, flags, frame):
 		print
 
 
-def main():
+def main():	
 	# Turn on camera.
 	# cap = cv2.VideoCapture(0)
 	camera = PiCamera()
@@ -124,7 +124,6 @@ def main():
 		key = cv2.waitKey(10)
 		if key == 27:
 			print 'Exiting...'
-			cap.release()
 			return 0
 		elif key == ord('h'):
 			SHOW_ALL_DETECTIONS = ~SHOW_ALL_DETECTIONS

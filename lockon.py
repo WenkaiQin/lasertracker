@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from collections import deque
 
-color = None
+color = ([0,0,0])
 lb = np.array([0,0,0])
 ub = np.array([0,0,0])
 
