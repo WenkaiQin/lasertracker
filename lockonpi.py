@@ -3,7 +3,7 @@ import numpy as np
 from collections import deque
 
 from picamera.array import PiRGBArray
-from picamera import picamera
+from picamera import PiCamera
 import time
 
 color = None
@@ -23,7 +23,7 @@ def on_mouse(event, x, y, flags, frame):
 		lb = np.array(color - HSV_THRESHOLD/2)
 		ub = np.array(color + HSV_THRESHOLD/2)
 		print 'Lower bound: ', lb
-		print 'Upper bound: ', ub
+	print 'Upper bound: ', ub
 		print
 
 
