@@ -39,7 +39,7 @@ def main():
 	time.sleep(0.1)
 
 	# readable, im = cap.read()
-#
+
 	# Set up window.
 	cv2.namedWindow('Frame')
 	cv2.namedWindow('Results')
