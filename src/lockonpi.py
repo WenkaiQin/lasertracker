@@ -85,8 +85,8 @@ def move_neut(pwm):
 # Moves x, y pixels in either direction.
 def move_rel(pwm, x, y):
 	global X_PWM, Y_PWM
-	X_PWM += int(x*7808/3375)	# 1 pixel is about 2.31 ticks
-	Y_PWM += int(y*7808/3375)
+	X_PWM += int(x*1952/16875)	# 1 pixel is about 0.1157 ticks
+	Y_PWM += int(y*1952/16875)
 	pwm.setPWM(0,0,X_PWM)
 	pwm.setPWM(1,0,Y_PWM)
 
