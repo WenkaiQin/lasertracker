@@ -202,7 +202,6 @@ def main():
 			if SELECT_MODE:
 				print ' Selecting visible laser point reference point...'
 			else:
-				move_neut(pwm)
 				print ' Selecting invisible laser point color...'
 		if key == ord('2'):
 			print ' X PWM ticks:', X_PWM
@@ -210,9 +209,13 @@ def main():
 		if key == ord('q'):
 			print ' Testing motor function...'
 			move_rel(pwm, -50, -50)
+			time.sleep(1)
 			move_rel(pwm, -50, 50)
+			time.sleep(1)
 			move_rel(pwm, 50, 50)
+			time.sleep(1)
 			move_rel(pwm, 50, -50)
+			time.sleep(1)
 
 
 if __name__ == '__main__':
