@@ -87,8 +87,8 @@ def move_neut(pwm):
 # Moves x, y pixels in either direction.
 def move_rel(pwm, x, y):
 	global X_PWM, Y_PWM
-	X_PWM -= int(x*1952/16875)	# 1 pixel is about 0.1157 ticks
-	Y_PWM -= int(y*1952/16875)
+	X_PWM -= int(round(x*1952/16875))	# 1 pixel is about 0.1157 ticks
+	Y_PWM -= int(round(y*1952/16875))
 	pwm.setPWM(0,0,X_PWM)
 	pwm.setPWM(1,0,Y_PWM)
 
@@ -191,20 +191,23 @@ def main():
 		if key == 27:
 			print ' Exiting...'
 			return 0
-		elif key == ord('0'):
+		if key == ord('0'):
 			SHOW_ALL_DETECTIONS = not SHOW_ALL_DETECTIONS
 			if SHOW_ALL_DETECTIONS:
 				print ' Showing only largest contour...'
 			else:
 				print ' Showing all contours...'
-		elif key == ord('1'):
+		if key == ord('1'):
 			SELECT_MODE = not SELECT_MODE
 			if SELECT_MODE:
 				print ' Selecting visible laser point reference point...'
 			else:
 				move_neut(pwm)
 				print ' Selecting invisible laser point color...'
-		elif key == ord('q'):
+		if key == ord('2'):
+			print ' X PWM ticks:', X_PWM
+			print ' Y PWM ticks:', Y_PWM
+		if key == ord('q'):
 			print ' Testing motor function...'
 			move_rel(pwm, -50, -50)
 			move_rel(pwm, -50, 50)
