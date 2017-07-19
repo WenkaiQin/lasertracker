@@ -63,7 +63,6 @@ def find_center(contour):
 def draw_path(im, path, color=(255,170,86), thickness=2):
 	for i in range(len(path)-1):
 		cv2.line(im, (path[i]), (path[i+1]), color, thickness)
-
 	return im
 
 

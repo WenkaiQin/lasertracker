@@ -4,6 +4,7 @@ from collections import deque
 
 from picamera.array import PiRGBArray
 from picamera import PiCamera
+from Adafruit_PWM_Servo_Driver import PWM
 import time
 
 HSV_THRESHOLD = np.array([15,170,150])
@@ -82,6 +83,12 @@ def main():
 
 	# Allow camera to warm up.
 	time.sleep(0.1)
+
+	# Initialize PWM motor drivers and set motors to neutral position.
+	pwm = PWM(0x40)
+	pwm.setPWMFreq(60)
+	pwm.setPWM(0,0,307)
+	pwm.setPWM(1,0,307)
 
 	# Set up window.
 	cv2.namedWindow('Frame')
