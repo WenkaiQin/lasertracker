@@ -14,7 +14,7 @@ SELECT_MODE = True
 X_PWM = 307
 Y_PWM = 307
 
-ref_point = (166,140)
+ref_point = (159,144)
 color = ([84,10,255])
 lb = np.array(color - HSV_THRESHOLD/2)
 ub = np.array(color + HSV_THRESHOLD/2)
@@ -107,7 +107,7 @@ def main():
 	pwm = PWM(0x40)
 	pwm.setPWMFreq(50)
 	move_neut(pwm)
-	move_rel(pwm, -50, 60)
+	move_rel(pwm, -100, -100)
 	print ' Waiting for 5 secs...'
 	time.sleep(5)
 	move_neut(pwm)
@@ -202,8 +202,10 @@ def main():
 		elif key == ord('1'):
 			SELECT_MODE = not SELECT_MODE
 			if SELECT_MODE:
+				move_rel(pwm, 100, 100)
 				print ' Selecting visible laser point reference point...'
 			else:
+				move_neut(pwm)
 				print ' Selecting invisible laser point color...'
 
 
