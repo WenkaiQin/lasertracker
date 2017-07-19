@@ -87,7 +87,7 @@ def main():
 	# Initialize PWM motor drivers and set motors to neutral position.
 	pwm = PWM(0x40)
 	pwm.setPWMFreq(60)
-	pwm.setPWM(0,0,307)
+	pwm.setPWM(0,0,205)
 	pwm.setPWM(1,0,307)
 
 	# Set up window.
@@ -170,7 +170,6 @@ def main():
 		key = cv2.waitKey(10)
 		if key == 27:
 			print ' Exiting...'
-			cap.release()
 			return 0
 		elif key == ord('0'):
 			SHOW_ALL_DETECTIONS = not SHOW_ALL_DETECTIONS
