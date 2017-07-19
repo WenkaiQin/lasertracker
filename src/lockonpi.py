@@ -11,7 +11,7 @@ PATH_LENGTH = 11
 SHOW_ALL_DETECTIONS = True	
 SELECT_MODE = True
 
-ref_point = (0,0)
+ref_point = (166,140)
 color = ([84,10,255])
 lb = np.array(color - HSV_THRESHOLD/2)
 ub = np.array(color + HSV_THRESHOLD/2)
@@ -75,7 +75,6 @@ def main():
 	global ref_point, color, lb, ub, HSV_THRESHOLD, PATH_LENGTH, SHOW_ALL_DETECTIONS, SELECT_MODE
 	
 	# Turn on camera.
-	# cap = cv2.VideoCapture(0)
 	camera = PiCamera()
 	camera.resolution = (640, 480)
 	camera.framerate = 32
@@ -88,12 +87,6 @@ def main():
 	cv2.namedWindow('Frame')
 	cv2.namedWindow('Results')
 	cv2.moveWindow('Results', 0, 400)
-
-	# Exit with error if camera couldn't turn on or read.
-	# if not readable:
-	# 	print 'ERROR: The camera could not be opened or read.'
-	# 	print 'Exiting...'
-	# 	return 0
 
 	# Initialize path queue.
 	raw_path = deque(maxlen=PATH_LENGTH)
