@@ -9,8 +9,10 @@ import time
 
 HSV_THRESHOLD = np.array([15,170,150])
 PATH_LENGTH = 11
-SHOW_ALL_DETECTIONS = True	
+SHOW_ALL_DETECTIONS = True
 SELECT_MODE = True
+X_PWM = 307
+Y_PWM = 307
 
 ref_point = (166,140)
 color = ([84,10,255])
@@ -71,6 +73,23 @@ def draw_path(im, path, color=(255,170,86), thickness=2):
 	return im
 
 
+# Moves servos to neutral position.
+def move_neut(pwm):
+	global X_PWM, Y_PWM
+	X_PWM = 307
+	Y_PWM = 307
+	pwm.setPWM(0,0,X_PWM)
+	pwm.setPWM(1,0,Y_PWM)
+
+
+# Moves x, y pixels in either direction.
+def move_rel(pwm, x, y):
+	global X_PWM, Y_PWM
+	X_PWM += int(x*7808/3375)	# 1 pixel is about 2.31 ticks
+	Y_PWM += int(y*7808/3375)
+	pwm.setPWM(0,0,X_PWM)
+	pwm.setPWM(1,0,Y_PWM)
+
 
 def main():
 	global ref_point, color, lb, ub, HSV_THRESHOLD, PATH_LENGTH, SHOW_ALL_DETECTIONS, SELECT_MODE
@@ -86,9 +105,10 @@ def main():
 
 	# Initialize PWM motor drivers and set motors to neutral position.
 	pwm = PWM(0x40)
-	pwm.setPWMFreq(60)
-	pwm.setPWM(0,0,205)
-	pwm.setPWM(1,0,307)
+	pwm.setPWMFreq(50)
+	move_neut(pwm)
+	move_rel(pwm, -50, 60)
+	move_neut(pwm)
 
 	# Set up window.
 	cv2.namedWindow('Frame')
