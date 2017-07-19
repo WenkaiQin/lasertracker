@@ -109,10 +109,6 @@ def main():
 	pwm = PWM(0x40)
 	pwm.setPWMFreq(50)
 	move_neut(pwm)
-	move_rel(pwm, -100, -100)
-	print ' Waiting for 5 secs...'
-	time.sleep(5)
-	move_neut(pwm)
 
 	# Set up window.
 	cv2.namedWindow('Frame')
