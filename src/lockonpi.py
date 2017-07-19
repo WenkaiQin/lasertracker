@@ -7,6 +7,7 @@ from picamera import PiCamera
 from Adafruit_PWM_Servo_Driver import PWM
 import time
 
+# General settings globals.
 HSV_THRESHOLD = np.array([15,170,150])
 PATH_LENGTH = 11
 SHOW_ALL_DETECTIONS = True
@@ -14,6 +15,7 @@ SELECT_MODE = True
 X_PWM = 307
 Y_PWM = 307
 
+# Callback function globals.
 ref_point = (159,144)
 color = ([84,10,255])
 lb = np.array(color - HSV_THRESHOLD/2)
@@ -85,8 +87,8 @@ def move_neut(pwm):
 # Moves x, y pixels in either direction.
 def move_rel(pwm, x, y):
 	global X_PWM, Y_PWM
-	X_PWM += int(x*1952/16875)	# 1 pixel is about 0.1157 ticks
-	Y_PWM += int(y*1952/16875)
+	X_PWM -= int(x*1952/16875)	# 1 pixel is about 0.1157 ticks
+	Y_PWM -= int(y*1952/16875)
 	pwm.setPWM(0,0,X_PWM)
 	pwm.setPWM(1,0,Y_PWM)
 
@@ -202,11 +204,16 @@ def main():
 		elif key == ord('1'):
 			SELECT_MODE = not SELECT_MODE
 			if SELECT_MODE:
-				move_rel(pwm, 100, 100)
 				print ' Selecting visible laser point reference point...'
 			else:
 				move_neut(pwm)
 				print ' Selecting invisible laser point color...'
+		elif key == ord('q'):
+			print ' Testing motor function...'
+			move_rel(pwm, -50, -50)
+			move_rel(pwm, -50, 50)
+			move_rel(pwm, 50, 50)
+			move_rel(pwm, 50, -50)
 
 
 if __name__ == '__main__':
