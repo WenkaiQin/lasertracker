@@ -108,6 +108,8 @@ def main():
 	pwm.setPWMFreq(50)
 	move_neut(pwm)
 	move_rel(pwm, -50, 60)
+	print ' Waiting for key input...'
+	cv2.waitKey()
 	move_neut(pwm)
 
 	# Set up window.
