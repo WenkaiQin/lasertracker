@@ -30,13 +30,13 @@ def on_mouse(event, x, y, flags, frame):
 	if event == cv2.EVENT_LBUTTONUP:
 		if SELECT_MODE:
 			ref_point = (x,y)
-			print ' Visible laser reference point: ', ref_point
+			print ' Visible laser reference point:', ref_point
 		else:
 			color = frame[y,x].tolist()
 			lb = np.array(color - HSV_THRESHOLD/2)
 			ub = np.array(color + HSV_THRESHOLD/2)
-			print ' Lower bound: ', lb
-			print ' Upper bound: ', ub
+			print ' Lower bound:', lb
+			print ' Upper bound:', ub
 
 
 def filter_path(path, dfilter = [
@@ -209,13 +209,6 @@ def main():
 		if key == ord('q'):
 			print ' Testing motor function...'
 			move_rel(pwm, -50, -50)
-			time.sleep(1)
-			move_rel(pwm, -50, 50)
-			time.sleep(1)
-			move_rel(pwm, 50, 50)
-			time.sleep(1)
-			move_rel(pwm, 50, -50)
-			time.sleep(1)
 
 
 if __name__ == '__main__':
