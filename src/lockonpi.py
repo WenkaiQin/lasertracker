@@ -205,7 +205,7 @@ def main():
 		frame = np.concatenate((im,mask_3ch), axis=1)
 
 		# Add text to frame, show frame.
-		cv2.putText(frame, 'HSV: '+str(color), (30,30), 1, 1.5, (255,255,255), 2)
+		cv2.putText(frame, 'HSV: '+str(COLOR), (30,30), 1, 1.5, (255,255,255), 2)
 		cv2.putText(frame, 'Ref: '+str(REF_POINT), (30,60), 1, 1.5, (255,255,255), 2)
 		cv2.imshow('Frame', frame)
 
