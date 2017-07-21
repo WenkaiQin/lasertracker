@@ -244,6 +244,8 @@ def main():
 		if key == ord('q'):
 			print ' Testing motor function...'
 			curr_pwm = move_rel(pwm, (-50,-50), curr_pwm)
+			time.sleep(1)
+			curr_pwm = move_neut(pwm)
 		if key == ord('p'):
 			print ' Pausing...'
 			cv2.waitKey()
