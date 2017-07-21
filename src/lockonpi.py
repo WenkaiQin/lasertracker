@@ -232,7 +232,7 @@ def main():
 		if key == ord('2'):
 			print ' PWM status:', curr_pwm
 		if key == ord('3'):
-		SHOW_ALL_PATHS = not SHOW_ALL_PATHS
+			SHOW_ALL_PATHS = not SHOW_ALL_PATHS
 		if SHOW_ALL_PATHS:
 			print ' Showing only filtered path...'
 		else:
