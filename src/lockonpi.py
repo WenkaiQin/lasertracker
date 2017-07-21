@@ -196,7 +196,7 @@ def main():
 
 			# Draw the center.
 			cv2.circle(results, center, 7, (255,255,255), -1)
-			cv2.circle(results, REF_POINT, 7, (0,0,255), -1)
+			cv2.circle(results, REF_POINT, 3, (0,0,255), -1)
 			cv2.line(results, REF_POINT, fil_path[-1], (255, 255, 255))
 
 			# Draw all hulls or just the biggest (depends on SHOW_ALL_DETECTIONS).
