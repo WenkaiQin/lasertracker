@@ -59,6 +59,7 @@ def update_path(path, rel):
 	path_L = [ tuple(np.subtract(coord,rel)) for coord in path ]
 	return deque(path_L)
 
+
 # Updates all coordinates of a path using a reference point to a destination point.
 def update_path_dst(path, ref, dst):
 	rel = np.subtract(dst, ref)
@@ -182,6 +183,7 @@ def main():
 
 			# Draw path.
 			if SHOW_ALL_PATHS:
+				print raw_path
 				draw_path(results, raw_path)
 			draw_path(results, fil_path, color=(51,204,51))
 
@@ -189,7 +191,6 @@ def main():
 			curr_pwm = move_ref(pwm, REF_POINT, fil_path[-1], curr_pwm)
 			cv2.line(results, REF_POINT, fil_path[-1], (255, 255, 255))
 			raw_path = update_path_dst(raw_path, REF_POINT, fil_path[-1])
-			test_path = update_path_dst(raw_path, REF_POINT, fil_path[-1])
 			fil_path = update_path_dst(fil_path, REF_POINT, fil_path[-1])
 
 			# Draw the center.
