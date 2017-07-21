@@ -219,6 +219,7 @@ def main():
 		key = cv2.waitKey(10)
 		if key == 27:
 			print ' Exiting...'
+			curr_pwm = move_neut(pwm)
 			return 0
 		if key == ord('0'):
 			SHOW_ALL_DETECTIONS = not SHOW_ALL_DETECTIONS
