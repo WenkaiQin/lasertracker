@@ -233,10 +233,10 @@ def main():
 			print ' PWM status:', curr_pwm
 		if key == ord('3'):
 			SHOW_ALL_PATHS = not SHOW_ALL_PATHS
-		if SHOW_ALL_PATHS:
-			print ' Showing only filtered path...'
-		else:
-			print ' Showing both raw and filtered paths...'
+			if SHOW_ALL_PATHS:
+				print ' Showing only filtered path...'
+			else:
+				print ' Showing both raw and filtered paths...'
 		if key == ord('q'):
 			print ' Testing motor function...'
 			curr_pwm = move_rel(pwm, (-50,-50), curr_pwm)
