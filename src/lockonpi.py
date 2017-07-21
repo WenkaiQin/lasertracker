@@ -146,6 +146,8 @@ def main():
 
 	# Loop for each frame.
 	for frame in camera.capture_continuous(raw_capture, format="bgr", use_video_port=True):
+		print raw_path
+
 		# Capture and format frame.
 		im = frame.array
 		im = cv2.pyrDown(im)
