@@ -152,8 +152,8 @@ def main():
 
 		# Capture and format frame.
 		im = frame.array
-		im = cv2.pyrDown(im)
-		# im = cv2.flip(im, 1)q
+		# im = cv2.pyrDown(im)
+		# im = cv2.flip(im, 1)
 		im_hsv = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
 
 		# Callback if mouse action in frame.
