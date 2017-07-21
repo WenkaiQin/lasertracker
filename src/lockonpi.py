@@ -57,7 +57,7 @@ def filter_path(path, dfilter = [
 # Updates all coordinates of a path with movement.
 def update_path(path, rel):
 	path_L = [ tuple(np.subtract(coord,rel)) for coord in path ]
-	return deque(path_L, maxlen=len(path_L))
+	return deque(path_L, maxlen=len(PATH_LENGTH))
 
 
 # Updates all coordinates of a path using a reference point to a destination point.
