@@ -100,6 +100,8 @@ def move_neut(pwm):
 # Moves x, y pixels in either direction.
 def move_rel(pwm, rel, curr_pwm):
 	x_pwm, y_pwm = curr_pwm
+	print int(round(rel[0]*1952/16875))	# 1 pixel is about 0.1157 ticks
+	print int(round(rel[1]*1952/16875))
 	x_pwm -= int(round(rel[0]*1952/16875))	# 1 pixel is about 0.1157 ticks
 	y_pwm -= int(round(rel[1]*1952/16875))
 	return set_pwm(pwm, x_pwm, y_pwm)
