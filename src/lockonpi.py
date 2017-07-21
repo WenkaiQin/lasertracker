@@ -88,7 +88,7 @@ def draw_path(im, path, color=(255,170,86), thickness=2, window_size=(640,480)):
 # Set pwm in x and y directions.
 def set_pwm(pwm, x, y):
 	pwm.setPWM(0, 0, x)
-	pwm.setPWM(0, 0, y)
+	pwm.setPWM(1, 0, y)
 	return (x, y)
 
 
@@ -243,7 +243,7 @@ def main():
 				print ' Showing both raw and filtered paths...'
 		if key == ord('q'):
 			print ' Testing motor function...'
-			curr_pwm = move_rel(pwm, (-50,-50), curr_pwm)
+			curr_pwm = move_rel(pwm, (100,100), curr_pwm)
 			time.sleep(1)
 			curr_pwm = move_neut(pwm)
 		if key == ord('p'):
