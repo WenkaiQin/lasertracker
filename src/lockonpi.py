@@ -191,7 +191,9 @@ def main():
 			print raw_path
 			# raw_path = update_path_dst(raw_path, REF_POINT, fil_path[-1])
 			cv2.line(results, REF_POINT, fil_path[-1], (255, 255, 255))
-			print update_path_dst(raw_path, REF_POINT, fil_path[-1])
+			test_path = update_path_dst(raw_path, REF_POINT, fil_path[-1])
+			print test_path
+			draw_path(results, test_path, color=(14,10,140))
 			print
 			# fil_path = update_path_dst(fil_path, REF_POINT, fil_path[-1])
 
