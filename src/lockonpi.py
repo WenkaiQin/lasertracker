@@ -59,11 +59,10 @@ def update_path(path, rel):
 	path_L = [ tuple(np.subtract(coord,rel)) for coord in path ]
 	return deque(path_L)
 
-# Updates all coordinates of a path with movement.
-def update_path(path, ref, dst):
+# Updates all coordinates of a path using a reference point to a destination point.
+def update_path_dst(path, ref, dst):
 	rel = np.subtract(dst, ref)
-	path_L = [ tuple(np.subtract(coord,rel)) for coord in path ]
-	return deque(path_L)
+	return update_path(path, rel)
 
 
 # Finds mass center of contour.
@@ -87,8 +86,8 @@ def draw_path(im, path, color=(255,170,86), thickness=2, window_size=(640,480)):
 
 # Set pwm in x and y directions.
 def set_pwm(pwm, x, y):
-	pwm.setPWM(0, 0, x)
-	pwm.setPWM(0, 0, y)
+	# pwm.setPWM(0, 0, x)
+	# pwm.setPWM(0, 0, y)
 	return (x, y)
 
 
@@ -189,9 +188,13 @@ def main():
 			# Move the reference point to the center, then update paths to match.
 			print fil_path
 			print fil_path[-1]
-			# curr_pwm = move_ref(pwm, REF_POINT, fil_path[-1], curr_pwm)
-			# raw_path = update_path(raw_path, REF_POINT, fil_path[-1])
-			# fil_path = update_path(fil_path, REF_POINT, fil_path[-1])
+			curr_pwm = move_ref(pwm, REF_POINT, fil_path[-1], curr_pwm)
+			print
+			print raw_path
+			raw_path = update_path_dst(raw_path, REF_POINT, fil_path[-1])
+			print raw_path
+			print
+			# fil_path = update_path_dst(fil_path, REF_POINT, fil_path[-1])
 
 			# Draw the center.
 			cv2.circle(results, center, 7, (255, 255, 255), -1)
