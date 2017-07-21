@@ -146,7 +146,6 @@ def main():
 
 	# Loop for each frame.
 	for frame in camera.capture_continuous(raw_capture, format="bgr", use_video_port=True):
-		print raw_path
 
 		# Capture and format frame.
 		im = frame.array
@@ -188,6 +187,8 @@ def main():
 			draw_path(results, fil_path, color=(51,204,51))
 
 			# Move the reference point to the center, then update paths to match.
+			print fil_path
+			print fil_path[-1]
 			# curr_pwm = move_ref(pwm, REF_POINT, fil_path[-1], curr_pwm)
 			# raw_path = update_path(raw_path, REF_POINT, fil_path[-1])
 			# fil_path = update_path(fil_path, REF_POINT, fil_path[-1])
