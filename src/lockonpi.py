@@ -186,8 +186,6 @@ def main():
 			draw_path(results, fil_path, color=(51,204,51))
 
 			# Move the reference point to the center, then update paths to match.
-			print fil_path
-			print fil_path[-1]
 			curr_pwm = move_ref(pwm, REF_POINT, fil_path[-1], curr_pwm)
 			print
 			print raw_path
