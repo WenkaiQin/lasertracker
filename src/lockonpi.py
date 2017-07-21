@@ -189,8 +189,9 @@ def main():
 			curr_pwm = move_ref(pwm, REF_POINT, fil_path[-1], curr_pwm)
 			print
 			print raw_path
-			raw_path = update_path_dst(raw_path, REF_POINT, fil_path[-1])
-			print raw_path
+			# raw_path = update_path_dst(raw_path, REF_POINT, fil_path[-1])
+			cv2.line(results, REF_POINT, fil_path[-1], (255, 255, 255))
+			print update_path_dst(raw_path, REF_POINT, fil_path[-1])
 			print
 			# fil_path = update_path_dst(fil_path, REF_POINT, fil_path[-1])
 
@@ -244,6 +245,10 @@ def main():
 		if key == ord('q'):
 			print ' Testing motor function...'
 			curr_pwm = move_rel(pwm, (-50,-50), curr_pwm)
+		if key == ord('p'):
+			print ' Pausing...'
+			cv2.waitKey()
+			print ' Resuming...'
 
 
 if __name__ == '__main__':
