@@ -80,7 +80,7 @@ def find_center(contour):
 # Draws path on image. Skips points that are outside of window.
 def draw_path(im, path, color=(255,170,86), thickness=2, window_size=(640,480)):
 	for i in range(len(path)-1):
-		if not (0<path[i][0]<window_size[0] and 0<path[i][1]<window_size[1]) and (0<path[i+1][0]<window_size[0] and 0<path[i+1][1]<window_size[1]):
+		if (0<=path[i][0]<window_size[0] and 0<path[i][1]<window_size[1]) and (0<=path[i+1][0]<window_size[0] and 0<path[i+1][1]<window_size[1]):
 			cv2.line(im, (path[i]), (path[i+1]), color, thickness)
 	return im
 
