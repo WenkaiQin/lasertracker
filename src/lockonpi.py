@@ -7,38 +7,36 @@ from picamera import PiCamera
 from Adafruit_PWM_Servo_Driver import PWM
 import time
 
-# General settings globals.
+
 HSV_THRESHOLD = np.array([15,170,150])
 PATH_LENGTH = 11
 SHOW_ALL_DETECTIONS = True
+SHOW_ALL_PATHS = True
 SELECT_MODE = True
-X_PWM = 307
-Y_PWM = 307
-
-# Callback function globals.
-ref_point = (159,144)
-color = ([84,10,255])
-lb = np.array(color - HSV_THRESHOLD/2)
-ub = np.array(color + HSV_THRESHOLD/2)
+REF_POINT = (159,144)
+COLOR = ([84,10,255])
+HSV_LOW = np.array(COLOR - HSV_THRESHOLD/2)
+HSV_HIGH = np.array(COLOR + HSV_THRESHOLD/2)
 
 
 # On mouse event callback function. Locks on selected color.
 def on_mouse(event, x, y, flags, frame):
 	# Use globals because callback functions are a pain.
-	global ref_point, color, lb, ub, SELECT_MODE
+	global HSV_THRESHOLD, SELECT_MODE, REF_POINT, COLOR, HSV_LOW, HSV_HIGH
 
 	if event == cv2.EVENT_LBUTTONUP:
 		if SELECT_MODE:
-			ref_point = (x,y)
-			print ' Visible laser reference point:', ref_point
+			REF_POINT = (x,y)
+			print ' Visible laser reference point:', REF_POINT
 		else:
-			color = frame[y,x].tolist()
-			lb = np.array(color - HSV_THRESHOLD/2)
-			ub = np.array(color + HSV_THRESHOLD/2)
-			print ' Lower bound:', lb
-			print ' Upper bound:', ub
+			COLOR = frame[y,x].tolist()
+			HSV_LOW = np.array(COLOR - HSV_THRESHOLD/2)
+			HSV_HIGH = np.array(COLOR + HSV_THRESHOLD/2)
+			print ' Lower bound:', HSV_LOW
+			print ' Upper bound:', HSV_HIGH
 
 
+# Uses a digital filter to return a single point from a path.
 def filter_path(path, dfilter = [
 	0.0024, 0.0162, 0.0553, 
 	0.1224, 0.1923, 0.2226,	
@@ -56,6 +54,18 @@ def filter_path(path, dfilter = [
 		return tuple(np.dot(dfilter, path).astype(int))
 
 
+# Updates all coordinates of a path with movement.
+def update_path(path, rel):
+	path_L = [ tuple(np.subtract(coord,rel)) for coord in path ]
+	return deque(path_L)
+
+# Updates all coordinates of a path with movement.
+def update_path(path, ref, dst):
+	rel = np.subtract(dst, ref)
+	path_L = [ tuple(np.subtract(coord,rel)) for coord in path ]
+	return deque(path_L)
+
+
 # Finds mass center of contour.
 def find_center(contour):
 	moment = cv2.moments(contour)
@@ -64,38 +74,48 @@ def find_center(contour):
 	else:
 		cx = int(moment['m10']/moment['m00'])
 		cy = int(moment['m01']/moment['m00'])
+	return (cx, cy)
 
-	return cx, cy
 
-
-# Draws path on image.
-def draw_path(im, path, color=(255,170,86), thickness=2):
+# Draws path on image. Skips points that are outside of window.
+def draw_path(im, path, color=(255,170,86), thickness=2, window_size=(640,480)):
 	for i in range(len(path)-1):
-		cv2.line(im, (path[i]), (path[i+1]), color, thickness)
+		if not (0<path[i][0]<window_size[0] and 0<path[i][1]<window_size[1]) and (0<path[i+1][0]<window_size[0] and 0<path[i+1][1]<window_size[1]):
+			cv2.line(im, (path[i]), (path[i+1]), color, thickness)
 	return im
+
+
+# Set pwm in x and y directions.
+def set_pwm(pwm, x, y):
+	pwm.setPWM(0, 0, x)
+	pwm.setPWM(0, 0, y)
+	return (x, y)
 
 
 # Moves servos to neutral position.
 def move_neut(pwm):
-	global X_PWM, Y_PWM
-	X_PWM = 307
-	Y_PWM = 307
-	pwm.setPWM(0,0,X_PWM)
-	pwm.setPWM(1,0,Y_PWM)
+	return set_pwm(pwm, 307, 307)
 
 
 # Moves x, y pixels in either direction.
-def move_rel(pwm, x, y):
-	global X_PWM, Y_PWM
-	X_PWM -= int(round(x*1952/16875))	# 1 pixel is about 0.1157 ticks
-	Y_PWM -= int(round(y*1952/16875))
-	pwm.setPWM(0,0,X_PWM)
-	pwm.setPWM(1,0,Y_PWM)
+def move_rel(pwm, rel, curr_pwm):
+	x_pwm, y_pwm = curr_pwm
+	x_pwm -= int(round(rel[0]*1952/16875))	# 1 pixel is about 0.1157 ticks
+	y_pwm -= int(round(rel[1]*1952/16875))
+	return set_pwm(pwm, x_pwm, y_pwm)
+
+
+# Moves motor to move reference point to destination point.
+def move_ref(pwm, ref, dst, curr_pwm):
+	rel = np.subtract(dst,ref)
+	return move_rel(pwm, rel, curr_pwm)
 
 
 def main():
-	global ref_point, color, lb, ub, HSV_THRESHOLD, PATH_LENGTH, SHOW_ALL_DETECTIONS, SELECT_MODE
-	
+	global HSV_THRESHOLD, PATH_LENGTH, SHOW_ALL_DETECTIONS, SHOW_ALL_PATHS, SELECT_MODE, REF_POINT, COLOR, HSV_LOW, HSV_HIGH
+
+	curr_pwm = (0,0)
+
 	# Turn on camera.
 	camera = PiCamera()
 	camera.resolution = (640, 480)
@@ -108,7 +128,7 @@ def main():
 	# Initialize PWM motor drivers and set motors to neutral position.
 	pwm = PWM(0x40)
 	pwm.setPWMFreq(50)
-	move_neut(pwm)
+	curr_pwm = move_neut(pwm)
 
 	# Set up window.
 	cv2.namedWindow('Frame')
@@ -120,9 +140,9 @@ def main():
 	fil_path = deque(maxlen=PATH_LENGTH)
 
 	# Print initial system state.
-	print ' Visible laser reference point: ', ref_point
-	print ' Lower bound: ', lb
-	print ' Upper bound: ', ub
+	print ' Visible laser reference point: ', REF_POINT
+	print ' Lower bound: ', HSV_LOW
+	print ' Upper bound: ', HSV_HIGH
 
 	# Loop for each frame.
 	for frame in camera.capture_continuous(raw_capture, format="bgr", use_video_port=True):
@@ -136,7 +156,7 @@ def main():
 		cv2.setMouseCallback('Frame', on_mouse, im_hsv)
 
 		# Make mask from threshold, 3 channel version for display.
-		mask = cv2.inRange(im_hsv, lb, ub)
+		mask = cv2.inRange(im_hsv, HSV_LOW, HSV_HIGH)
 		mask_3ch = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
 
 		# Use mask to find and draw contour/hull.
@@ -154,15 +174,21 @@ def main():
 			max_hull = cv2.convexHull(max_contour)
 
 			# Determine center of max contour using moment.
-			cx,cy = find_center(max_contour)
+			center = find_center(max_contour)
 
 			# Append center to path. Calculate and append new filtered path point.
-			raw_path.append((cx,cy))
+			raw_path.append(center)
 			fil_path.append((filter_path(raw_path)))
 
 			# Draw path.
-			# draw_path(results, raw_path)
+			if SHOW_ALL_PATHS:
+				draw_path(results, raw_path)
 			draw_path(results, fil_path, color=(51,204,51))
+
+			# Move the reference point to the center, then update paths to match.
+			curr_pwm = move_ref(pwm, REF_POINT, fil_path[-1], curr_pwm)
+			raw_path = update_path(raw_path, REF_POINT, fil_path[-1])
+			fil_path = update_path(fil_path, REF_POINT, fil_path[-1])
 
 			# Draw the center.
 			cv2.circle(results, (cx, cy), 7, (255, 255, 255), -1)
@@ -180,7 +206,7 @@ def main():
 
 		# Add text to frame, show frame.
 		cv2.putText(frame, 'HSV: '+str(color), (30,30), 1, 1.5, (255,255,255), 2)
-		cv2.putText(frame, 'Ref: '+str(ref_point), (30,60), 1, 1.5, (255,255,255), 2)
+		cv2.putText(frame, 'Ref: '+str(REF_POINT), (30,60), 1, 1.5, (255,255,255), 2)
 		cv2.imshow('Frame', frame)
 
 		# Clear stream in preparation for the next frame.
@@ -204,11 +230,16 @@ def main():
 			else:
 				print ' Selecting invisible laser point color...'
 		if key == ord('2'):
-			print ' X PWM ticks:', X_PWM
-			print ' Y PWM ticks:', Y_PWM
+			print ' PWM status:', curr_pwm
+		if key == ord('3'):
+		SHOW_ALL_PATHS = not SHOW_ALL_PATHS
+		if SHOW_ALL_PATHS:
+			print ' Showing only filtered path...'
+		else:
+			print ' Showing both raw and filtered paths...'
 		if key == ord('q'):
 			print ' Testing motor function...'
-			move_rel(pwm, -50, -50)
+			curr_pwm = move_rel(pwm, (-50,-50), curr_pwm)
 
 
 if __name__ == '__main__':
