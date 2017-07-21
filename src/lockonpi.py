@@ -108,6 +108,7 @@ def move_rel(pwm, rel, curr_pwm):
 # Moves motor to move reference point to destination point.
 def move_ref(pwm, ref, dst, curr_pwm):
 	rel = np.subtract(dst,ref)
+	rel[1] = -rel[1]
 	return move_rel(pwm, rel, curr_pwm)
 
 
@@ -150,7 +151,7 @@ def main():
 		# Capture and format frame.
 		im = frame.array
 		im = cv2.pyrDown(im)
-		# im = cv2.flip(im, 1)
+		# im = cv2.flip(im, 1)q
 		im_hsv = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
 
 		# Callback if mouse action in frame.
@@ -183,7 +184,6 @@ def main():
 
 			# Draw path.
 			if SHOW_ALL_PATHS:
-				print raw_path
 				draw_path(results, raw_path)
 			draw_path(results, fil_path, color=(51,204,51))
 
