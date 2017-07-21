@@ -78,7 +78,7 @@ def find_center(contour):
 
 
 # Draws path on image. Skips points that are outside of window.
-def draw_path(im, path, color=(255,170,86), thickness=2, window_size=(640,480)):
+def draw_path(im, path, color=(255,170,86), thickness=2, window_size=(640/2,480/2)):
 	for i in range(len(path)-1):
 		if (0<=path[i][0]<window_size[0] and 0<path[i][1]<window_size[1]) and (0<=path[i+1][0]<window_size[0] and 0<path[i+1][1]<window_size[1]):
 			cv2.line(im, (path[i]), (path[i+1]), color, thickness)
@@ -102,8 +102,8 @@ def move_rel(pwm, rel, curr_pwm):
 	x_pwm, y_pwm = curr_pwm
 	print int(round(rel[0]*1952/16875))	# 1 pixel is about 0.1157 ticks
 	print int(round(rel[1]*1952/16875))
-	x_pwm -= int(round(rel[0]*1952/16875))	# 1 pixel is about 0.1157 ticks
-	y_pwm -= int(round(rel[1]*1952/16875))
+	x_pwm -= int(round(rel[0]*1952/16875*2))	# 1 pixel is about 0.1157 ticks
+	y_pwm -= int(round(rel[1]*1952/16875*2))
 	return set_pwm(pwm, x_pwm, y_pwm)
 
 
@@ -152,7 +152,7 @@ def main():
 
 		# Capture and format frame.
 		im = frame.array
-		# im = cv2.pyrDown(im)
+		im = cv2.pyrDown(im)
 		# im = cv2.flip(im, 1)
 		im_hsv = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
 
