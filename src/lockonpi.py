@@ -188,10 +188,10 @@ def main():
 			draw_path(results, fil_path, color=(51,204,51))
 
 			# Move the reference point to the center, then update paths to match.
-			# curr_pwm = move_ref(pwm, REF_POINT, fil_path[-1], curr_pwm)
-			# cv2.line(results, REF_POINT, fil_path[-1], (255, 255, 255))
-			# raw_path = update_path_dst(raw_path, REF_POINT, fil_path[-1])
-			# fil_path = update_path_dst(fil_path, REF_POINT, fil_path[-1])
+			curr_pwm = move_ref(pwm, REF_POINT, fil_path[-1], curr_pwm)
+			cv2.line(results, REF_POINT, fil_path[-1], (255, 255, 255))
+			raw_path = update_path_dst(raw_path, REF_POINT, fil_path[-1])
+			fil_path = update_path_dst(fil_path, REF_POINT, fil_path[-1])
 
 			# Draw the center.
 			cv2.circle(results, center, 7, (255, 255, 255), -1)
