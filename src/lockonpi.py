@@ -13,6 +13,7 @@ PATH_LENGTH = 11
 SHOW_ALL_DETECTIONS = True
 SHOW_ALL_PATHS = True
 SELECT_MODE = True
+FOLLOWING_MODE = False
 REF_POINT = (159,144)
 COLOR = ([84,10,255])
 HSV_LOW = np.array(COLOR - HSV_THRESHOLD/2)
@@ -115,7 +116,7 @@ def move_ref(pwm, ref, dst, curr_pwm):
 
 
 def main():
-	global HSV_THRESHOLD, PATH_LENGTH, SHOW_ALL_DETECTIONS, SHOW_ALL_PATHS, SELECT_MODE, REF_POINT, COLOR, HSV_LOW, HSV_HIGH
+	global HSV_THRESHOLD, PATH_LENGTH, SHOW_ALL_DETECTIONS, SHOW_ALL_PATHS, SELECT_MODE, FOLLOWING_MODE, REF_POINT, COLOR, HSV_LOW, HSV_HIGH
 
 	curr_pwm = (0,0)
 
@@ -190,9 +191,10 @@ def main():
 			draw_path(results, fil_path, color=(51,204,51))
 
 			# Move the reference point to the center, then update paths to match.
-			curr_pwm = move_ref(pwm, REF_POINT, fil_path[-1], curr_pwm)
-			raw_path = update_path_dst(raw_path, REF_POINT, fil_path[-1])
-			fil_path = update_path_dst(fil_path, REF_POINT, fil_path[-1])
+			if FOLLOWING_MODE:
+				curr_pwm = move_ref(pwm, REF_POINT, fil_path[-1], curr_pwm)
+				raw_path = update_path_dst(raw_path, REF_POINT, fil_path[-1])
+				fil_path = update_path_dst(fil_path, REF_POINT, fil_path[-1])
 
 			# Draw the center.
 			cv2.circle(results, center, 7, (255,255,255), -1)
@@ -227,9 +229,9 @@ def main():
 		if key == ord('0'):
 			SHOW_ALL_DETECTIONS = not SHOW_ALL_DETECTIONS
 			if SHOW_ALL_DETECTIONS:
-				print ' Showing only largest contour...'
+				print ' Showing only largest contour.'
 			else:
-				print ' Showing all contours...'
+				print ' Showing all contours.'
 		if key == ord('1'):
 			SELECT_MODE = not SELECT_MODE
 			if SELECT_MODE:
@@ -241,18 +243,31 @@ def main():
 		if key == ord('3'):
 			SHOW_ALL_PATHS = not SHOW_ALL_PATHS
 			if SHOW_ALL_PATHS:
-				print ' Showing only filtered path...'
+				print ' Showing only filtered path.'
 			else:
-				print ' Showing both raw and filtered paths...'
+				print ' Showing both raw and filtered paths.'
 		if key == ord('q'):
 			print ' Testing motor function...'
 			curr_pwm = move_rel(pwm, (100,100), curr_pwm)
 			time.sleep(1)
 			curr_pwm = move_neut(pwm)
 		if key == ord('p'):
-			print ' Pausing...'
+			print ' Paused.'
 			cv2.waitKey()
 			print ' Resuming...'
+		if key == ord('p'):
+			FOLLOWING_MODE = not FOLLOWING_MODE
+			if FOLLOWING_MODE:
+				print ' Following invisible point...'
+			else:
+				print ' Stopped.'
+		if key == ord('s'):
+			fname = raw_input(' What would you like to save your image as?: ')+'.png'
+			if fname == '.png':
+				fname = 'image.png'
+			path = 'images/'+fname
+			cv2.imwrite(path, im)
+			print ' Frame saved as '+path+'.'
 
 
 if __name__ == '__main__':

@@ -1,22 +1,26 @@
-from collections import deque
-import numpy as np
+import cv2
 
-# Updates all coordinates of a path with movement.
-def update_path(path, rel):
-	path_L = [ tuple(np.subtract(coord,rel)) for coord in path ]
-	return deque(path_L)
+cap = cv2.VideoCapture(0)
+readable, im = cap.read()
 
-# Updates all coordinates of a path with movement.
-def update_path_dst(path, ref, dst):
-	rel = np.subtract(dst, ref)
-	return update_path(path, rel)
+if readable:
+	print 'readable'
+else:
+	print 'not readable'
 
-path = deque(maxlen=3)
-path.append((1,1))
-path.append((2,2))
-path.append((3,3))
+while True:
+	readable, im = cap.read()
+	cv2.imshow('frame', im)
+	key = cv2.waitKey(10)
+	
+	if key == ord('s'):
+		fname = raw_input(' What would you like to save your image as?: ')+'.png'
+		if fname == '.png':
+			fname = 'image.png'
+		path = 'images/'+fname
+		cv2.imwrite(path, im)
+		print ' Frame saved as '+path+'.'
 
-# print update_path(path, (2,2))
-print path
-print update_path_dst(path, (1,1), (2,2))
-
+	if key == ord('q'):
+		print " Exiting..."
+		break
